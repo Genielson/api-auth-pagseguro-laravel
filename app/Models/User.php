@@ -34,4 +34,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTIdentifier(){
         return $this->getKey();
     }
+
+    public function getJWTCustomClaims(){
+        return [];
+    }
 }
