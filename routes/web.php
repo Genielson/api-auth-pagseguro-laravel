@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -17,3 +20,17 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+
+Route::group(['prefix' => 'api'], function ($route){
+    Route::post('login','Auth\AuthController@login');
+    Route::post('logout','Auth\AuthController@logout');
+
+    Route::group(['middleware' => 'auth:api'], function(){
+        Route::get('me', 'UserController@me');
+        Route::get('users', 'UserController@getUsers');
+        Route::post('refresh', 'Auth\AuthController@refresh');
+    });
+
+
+
+});
