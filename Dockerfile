@@ -6,3 +6,4 @@ RUN chown -R www-data:www-data /var/www/html/
 RUN chmod -R 775 /var/www/html/storage/
 EXPOSE 80
 CMD ["apache2-foreground"]
+RUN ln -s public html
