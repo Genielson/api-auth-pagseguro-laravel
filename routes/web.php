@@ -16,9 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+Route::get('/', function(){
+
+    return "Genielson Leal";
+
 });
+
+
 
 
 Route::group(['prefix' => 'api'], function ($route){
@@ -30,7 +34,5 @@ Route::group(['prefix' => 'api'], function ($route){
         Route::get('users', 'UserController@getUsers');
         Route::post('refresh', 'Auth\AuthController@refresh');
     });
-
-
 
 });
