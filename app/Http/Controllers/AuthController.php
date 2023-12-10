@@ -37,6 +37,27 @@ class AuthController extends BaseController
         );
     }
 
+    /**
+     * @param Request $request
+     * @return App\Traits\Iluminate\Http\Response|App\Traits\Iluminate\Http\JsonResponse|void
+     * @throws ValidationException
+     */
+    public function register(Request $request)
+    {
+        if ($this->isRegisterValid($request)) {
+            try {
+                $user = new User();
+                $user->password = $request->password;
+                $user->email = $request->email;
+                $user->name = $request->name;
+                $user->save();
+                return $this->successResponse($user);
+            } catch (\Exception $e) {
+                return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
+            }
+        }
+    }
+
 
 
 
