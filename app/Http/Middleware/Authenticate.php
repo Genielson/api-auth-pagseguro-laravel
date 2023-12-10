@@ -2,11 +2,15 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\ApiResponser;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
-
+use Illuminate\Http\Response;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 class Authenticate
 {
+     use ApiResponser;
     /**
      * The authentication guard factory instance.
      *
@@ -35,8 +39,20 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+            try{
+               $token =  auth()->payload();
+            }catch(\Exception $e){
+                if($e instanceof TokenInvalidException){
+                    return $this->errorResponse($e->getMessage(), Response::HTTP_NOT_FOUND);
+                }
+
+                if($e instanceof TokenExpiredException){
+                    return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+                }
+
+            }
         }
 
         return $next($request);
