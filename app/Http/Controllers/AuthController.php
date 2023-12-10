@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
-
-use App\Models\User;
+namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
-
+use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 class AuthController extends BaseController
+
 {
     /**
      * Create a new AuthController instance.
@@ -16,8 +17,10 @@ class AuthController extends BaseController
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login','signup']]);
     }
+
+
 
     /**
      * Login
@@ -27,13 +30,51 @@ class AuthController extends BaseController
     public function login()
     {
         $credentials = request(['email', 'password']);
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 401);
         }
         return $this->respondWithToken($token);
     }
+
+    public function signup(Request $request)
+    {
+        // Regras de validação
+        $rules = [
+            'nome' => 'required',
+            'email' => 'required|email',
+            'senha' => 'required',
+        ];
+
+        // Mensagens de erro personalizadas
+        $messages = [
+            'nome.required' => 'O campo nome é obrigatório.',
+            'email.required' => 'O campo email é obrigatório.',
+            'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
+            'senha.required' => 'O campo senha é obrigatório.',
+        ];
+
+        // Validar os dados
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Verificar se a validação falhou
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+           // Criar o usuário
+           $user = User::create([
+            'name' => $request->input('nome'),
+            'email' => $request->input('email'),
+            'password' => ($request->input('senha')),
+        ]);
+
+        // Retornar a resposta com sucesso e o token
+        return response()->json(['success' => true],  200);
+
+    }
+
 
     /**
      * refresh

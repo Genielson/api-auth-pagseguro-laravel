@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-
 /** @var \Laravel\Lumen\Routing\Router $router */
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,23 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function(){
-
-    return "Genielson Leal";
-
+$router->group(['prefix' => 'api'], function($router){
+    $router->post('/login', 'AuthController@login');
+    $router->post('/signup', 'AuthController@signup');
 });
 
 
-
-
-Route::group(['prefix' => 'api'], function ($route){
-    Route::post('login','Auth\AuthController@login');
-    Route::post('logout','Auth\AuthController@logout');
-
-    Route::group(['middleware' => 'auth:api'], function(){
-        Route::get('me', 'UserController@me');
-        Route::get('users', 'UserController@getUsers');
-        Route::post('refresh', 'Auth\AuthController@refresh');
-    });
-
-});
