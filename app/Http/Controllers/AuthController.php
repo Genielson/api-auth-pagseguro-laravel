@@ -20,6 +20,22 @@ class AuthController extends BaseController
         $this->middleware('auth:api', ['except' => ['login','signup']]);
     }
 
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws ValidationException
+     */
+    public function isLoginValid(Request $request)
+    {
+
+        return $this->validate($request, [
+            'email' => 'required|string',
+            'password' =>  'required|string'
+        ]);
+    }
+
+
      /**
      * @param Request $request
      * @return array

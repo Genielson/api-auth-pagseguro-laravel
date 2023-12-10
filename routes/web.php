@@ -16,9 +16,10 @@ use Illuminate\Support\Carbon;
 |
 */
 
-$router->group(['prefix' => 'api'], function($router){
-    $router->post('/login', 'AuthController@login');
-    $router->post('/signup', 'AuthController@signup');
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('/', function () {
+        return microtime();
+    });
+    $router->post('/register', 'AuthController@register');
 });
-
 
