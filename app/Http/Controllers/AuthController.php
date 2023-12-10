@@ -20,6 +20,24 @@ class AuthController extends BaseController
         $this->middleware('auth:api', ['except' => ['login','signup']]);
     }
 
+     /**
+     * @param Request $request
+     * @return array
+     * @throws ValidationException
+     */
+    public function isRegisterValid(Request $request)
+    {
+        return  $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:5'
+            ]
+        );
+    }
+
+
 
 
     /**
