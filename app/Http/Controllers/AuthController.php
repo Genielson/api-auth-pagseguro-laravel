@@ -1,25 +1,42 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Laravel\Lumen\Routing\Controller as BaseController;
-use App\Models\User;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Auth;
-class AuthController extends BaseController
 
+use App\Models\User;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
+
+/** @package App\Http\Controllers */
+class AuthController extends Controller
 {
+
+    use ApiResponser;
     /**
-     * Create a new AuthController instance.
+     * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login','signup']]);
-    }
+    public function __construct(){}
 
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws ValidationException
+     */
+    public function isRegisterValid(Request $request)
+    {
+        return  $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:5'
+            ]
+        );
+    }
 
     /**
      * @param Request $request
@@ -35,22 +52,23 @@ class AuthController extends BaseController
         ]);
     }
 
-
-     /**
+    /**
      * @param Request $request
-     * @return array
+     * @return App\Traits\Iluminate\Http\Response|void
      * @throws ValidationException
      */
-    public function isRegisterValid(Request $request)
+    public function login(Request $request)
     {
-        return  $this->validate(
-            $request,
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:5'
-            ]
-        );
+        if ($this->isLoginValid($request)) {
+            $credentials = $request->only(['email', 'password']);
+
+            $token = auth()->setTTL(env('JWT_TTL','60'))->attempt($credentials);
+            if($token){
+            return $this->respondWithToken($token);
+            }else{
+                return $this->errorResponse('User not found', Response::HTTP_NOT_FOUND);
+            }
+        }
     }
 
     /**
@@ -74,71 +92,9 @@ class AuthController extends BaseController
         }
     }
 
-
-
-/**
-     * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
-     * @throws ValidationException
-     */
-    public function login(Request $request)
-    {
-        if ($this->isLoginValid($request)) {
-            $credentials = $request->only(['email', 'password']);
-
-            $token = auth()->setTTL(env('JWT_TTL','60'))->attempt($credentials);
-            if($token){
-            return $this->respondWithToken($token);
-            }else{
-                return $this->errorResponse('User not found', Response::HTTP_NOT_FOUND);
-            }
-        }
-    }
-
     public function me(){
-        $user = auth()->user();
-        return $this->successResponse($user);
-    }
+            $user = auth()->user();
 
-
-
-
-    /**
-     * refresh
-     *
-     * @return void
-     */
-    public function refresh()
-    {
-        $token = auth()->refresh();
-        return $this->respondWithToken($token);
-    }
-
-    /**
-     * Logout
-     *
-     * @return void
-     */
-    public function logout()
-    {
-        auth()->logout();
-        return response()->json([
-            'message' => 'Logout with success!'
-        ], 401);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $token
-     * @return void
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60 // default 1 hour
-        ]);
+            return $this->successResponse($user);
     }
 }

@@ -1,9 +1,6 @@
 <?php
 
 /** @var \Laravel\Lumen\Routing\Router $router */
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +13,20 @@ use Illuminate\Support\Carbon;
 |
 */
 
+$router->get('/', function () {
+    return microtime();
+});
+
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/', function () {
         return microtime();
     });
+
     $router->post('/register', 'AuthController@register');
     $router->post('/login', 'AuthController@login');
-
+    //Metodo que só pode ser acessado com o usuário autenticado
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/me', 'AuthController@me');
 
     });
 });
-

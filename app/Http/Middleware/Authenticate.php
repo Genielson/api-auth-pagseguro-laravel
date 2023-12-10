@@ -42,7 +42,7 @@ class Authenticate
 
         if ($this->auth->guard($guard)->guest()) {
             try{
-               $token =  auth()->payload();
+               $user =  auth()->payload();
             }catch(\Exception $e){
                 if($e instanceof TokenInvalidException){
                     return $this->errorResponse($e->getMessage(), Response::HTTP_NOT_FOUND);
