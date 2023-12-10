@@ -21,5 +21,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         return microtime();
     });
     $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
 });
 

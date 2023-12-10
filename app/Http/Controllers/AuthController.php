@@ -95,42 +95,12 @@ class AuthController extends BaseController
         }
     }
 
-    public function signup(Request $request)
-    {
-        // Regras de validação
-        $rules = [
-            'nome' => 'required',
-            'email' => 'required|email',
-            'senha' => 'required',
-        ];
-
-        // Mensagens de erro personalizadas
-        $messages = [
-            'nome.required' => 'O campo nome é obrigatório.',
-            'email.required' => 'O campo email é obrigatório.',
-            'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
-            'senha.required' => 'O campo senha é obrigatório.',
-        ];
-
-        // Validar os dados
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        // Verificar se a validação falhou
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
-           // Criar o usuário
-           $user = User::create([
-            'name' => $request->input('nome'),
-            'email' => $request->input('email'),
-            'password' => ($request->input('senha')),
-        ]);
-
-        // Retornar a resposta com sucesso e o token
-        return response()->json(['success' => true],  200);
-
+    public function me(){
+        $user = auth()->user();
+        return $this->successResponse($user);
     }
+
+
 
 
     /**
