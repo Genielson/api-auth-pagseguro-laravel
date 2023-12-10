@@ -76,21 +76,23 @@ class AuthController extends BaseController
 
 
 
-
-    /**
-     * Login
-     *
-     * @return void
+/**
+     * @param Request $request
+     * @return App\Traits\Iluminate\Http\Response|void
+     * @throws ValidationException
      */
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
-        if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 401);
+        if ($this->isLoginValid($request)) {
+            $credentials = $request->only(['email', 'password']);
+
+            $token = auth()->setTTL(env('JWT_TTL','60'))->attempt($credentials);
+            if($token){
+            return $this->respondWithToken($token);
+            }else{
+                return $this->errorResponse('User not found', Response::HTTP_NOT_FOUND);
+            }
         }
-        return $this->respondWithToken($token);
     }
 
     public function signup(Request $request)
