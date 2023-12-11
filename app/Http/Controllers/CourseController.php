@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Course;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -34,6 +34,15 @@ class CourseController extends Controller
                 'password' => 'required|min:5'
             ]
         );
+    }
+
+    public function index(){
+        $courses = Course::all();
+        if(count($courses) > 0){
+            return response()->json($courses);
+        }else{
+            return response()->json(["Não encontramos nenhum curso", 404]);
+        }
     }
 
     /**
