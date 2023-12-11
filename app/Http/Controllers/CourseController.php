@@ -45,6 +45,15 @@ class CourseController extends Controller
         }
     }
 
+    public function show($id){
+        $course = Course::findOrFail($id);
+        if(count($course) > 0){
+            return response()->json($course);
+        }else{
+            return response()->json(["Não encontramos nenhum curso", 404]);
+        }
+    }
+
     /**
      * @param Request $request
      * @return array
