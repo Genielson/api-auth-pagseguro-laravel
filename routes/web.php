@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     //Metodo que só pode ser acessado com o usuário autenticado
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/me', 'AuthController@me');
+        $router->get('/courses', 'CourseController@index');
 
     });
 });

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 /** @package App\Http\Controllers */
@@ -44,7 +43,7 @@ class CourseController extends Controller
         if(count($courses) > 0){
             return response()->json([$courses,200]);
         }else{
-            return response()->json(["Não encontramos nenhum curso", 404]);
+            return response()->json(['mensagem'=>"Não encontramos nenhum curso"], 404);
         }
     }
 
@@ -53,7 +52,7 @@ class CourseController extends Controller
         if(count($course) > 0){
             return response()->json([$course,200]);
         }else{
-            return response()->json(["Não encontramos nenhum curso", 404]);
+            return response()->json(['mensagem'=>"Não encontramos nenhum curso"], 404);
         }
     }
 
@@ -73,34 +72,13 @@ class CourseController extends Controller
         if ($this->isRegisterValid($request)) {
 
             if(Course::create($request)){
-                return response()->json([' Curso criado com sucesso ', 201]);
+                return response()->json(['mensagem'=>' Curso criado com sucesso '], 201);
             }else{
-
+                return response()->json(['mensagem' => 'Erro ao criar o curso'], 500);
             }
 
         }else{
-            return response()->json(['Algum parametro não foi enviado corretamente',404]);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|App\Traits\Iluminate\Http\JsonResponse|void
-     * @throws ValidationException
-     */
-    public function register(Request $request)
-    {
-        if ($this->isRegisterValid($request)) {
-            try {
-                $user = new User();
-                $user->password = $request->password;
-                $user->email = $request->email;
-                $user->name = $request->name;
-                $user->save();
-                return $this->successResponse($user);
-            } catch (\Exception $e) {
-                return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
-            }
+            return response()->json(['mensagem'=>'Algum parametro não foi enviado corretamente'],404);
         }
     }
 
