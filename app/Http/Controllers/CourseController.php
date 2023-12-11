@@ -26,12 +26,15 @@ class CourseController extends Controller
      */
     public function isRegisterValid(Request $request)
     {
+
         return  $this->validate(
             $request,
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:5'
+                'description' => 'required',
+                'amount_hour' => 'required',
+                'amount_module' => 'required',
+                'user_id' => 'required'
             ]
         );
     }
@@ -39,7 +42,7 @@ class CourseController extends Controller
     public function index(){
         $courses = Course::all();
         if(count($courses) > 0){
-            return response()->json($courses);
+            return response()->json([$courses,200]);
         }else{
             return response()->json(["Não encontramos nenhum curso", 404]);
         }
@@ -48,7 +51,7 @@ class CourseController extends Controller
     public function show($id){
         $course = Course::findOrFail($id);
         if(count($course) > 0){
-            return response()->json($course);
+            return response()->json([$course,200]);
         }else{
             return response()->json(["Não encontramos nenhum curso", 404]);
         }
@@ -69,9 +72,11 @@ class CourseController extends Controller
     {
         if ($this->isRegisterValid($request)) {
 
+            if(Course::create($request)){
+                return response()->json([' Curso criado com sucesso ', 201]);
+            }else{
 
-
-
+            }
 
         }else{
             return response()->json(['Algum parametro não foi enviado corretamente',404]);
