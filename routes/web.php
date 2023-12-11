@@ -28,5 +28,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/me', 'AuthController@me');
         $router->post('/courses', 'CourseController@index');
         $router->post('/course/:id','CourseController@show');
+
     });
 });
