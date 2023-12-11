@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class CourseModel extends Model {
+class Course extends Model {
     protected $table = "course";
     protected $fillable = [
         'name',
@@ -16,8 +16,6 @@ class CourseModel extends Model {
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
-
-
 }
