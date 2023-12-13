@@ -107,9 +107,7 @@ class OrderController extends Controller
      * @throws ValidationException
      */
     public function destroy(Request $request){
-
         $user = Auth::user();
-
         if(isset($request->id)){
             if($user->id == $request->user_id){
                 $order = Order::findOrFail($request->id);
