@@ -39,6 +39,18 @@ class CourseController extends Controller
         );
     }
 
+    public function isUpdateValid(Request $request)
+    {
+        return $this->validate($request, [
+            'id' => 'required|exists:courses,id',
+            'name' => 'sometimes|required',
+            'description' => 'sometimes|required',
+            'amount_hour' => 'sometimes|required',
+            'amount_module' => 'sometimes|required',
+            'user_id' => 'sometimes|required',
+        ]);
+    }
+
     public function index(){
         $courses = Course::all();
         if(count($courses) > 0){
@@ -71,6 +83,36 @@ class CourseController extends Controller
 
     }
 
+
+
+    /**
+     * @param Request $request
+     * @return App\Traits\Iluminate\Http\Response|void
+     * @throws ValidationException
+     */
+
+     public function update(Request $request){
+
+        if(isset($request->id) ){
+            $user = Auth::user();
+            $course = Course::select("*")->where("id",$request->id)->get();
+            if($course->user_id == $user->id){
+                $course->delete();
+                return response()->json(["mensagem" => "Curso deletado com sucesso"], 200);
+            }else{
+                return response()->json(["mensagem" =>
+                "Não é possível deletar cursos de outros usuários"], 403);
+            }
+        }else{
+            return response()->json(["mensagem" => "Algum parametro não foi enviado
+            corretamente"],404);
+        }
+
+
+     }
+
+
+
     public function listUserCourse(){
         $user = Auth::user();
         $courses = Course::where('user_id', $user->id)->get();
@@ -81,11 +123,11 @@ class CourseController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
-     * @throws ValidationException
-     */
+        /**
+         * @param Request $request
+         * @return App\Traits\Iluminate\Http\Response|void
+         * @throws ValidationException
+         */
     public function store(Request $request)
     {
         if ($this->isRegisterValid($request)) {
@@ -105,6 +147,8 @@ class CourseController extends Controller
      * @return App\Traits\Iluminate\Http\Response|void
      * @throws ValidationException
      */
+
+
 
      public function destroy(Request $request){
 
