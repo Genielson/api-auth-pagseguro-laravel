@@ -101,4 +101,25 @@ class OrderController extends Controller
         }
     }
 
+     /**
+     * @param Request $request
+     * @return App\Traits\Iluminate\Http\Response|void
+     * @throws ValidationException
+     */
+    public function destroy(Request $request){
+
+        $user = Auth::user();
+
+        if(isset($request->id)){
+            if($user->id == $request->user_id){
+                $order = Order::findOrFail($request->id);
+                $order->delete();
+                return response()->json(["mensagem" => "Pedido deletado com sucesso"], 200);
+            }
+        }else{
+            return response()->json(['mensagem'=>'Algum parametro não foi enviado
+            corretamente'],404);
+        }
+    }
+
 }
