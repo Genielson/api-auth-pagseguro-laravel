@@ -93,7 +93,7 @@ class CourseController extends Controller
 
      public function update(Request $request){
 
-        if(isset($request->id) ){
+        if($this->isUpdateValid($request)){
             $user = Auth::user();
             $course = Course::select("*")->where("id",$request->id)->get();
             if($course->user_id == $user->id){
