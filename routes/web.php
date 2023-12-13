@@ -29,5 +29,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('/courses', 'CourseController@index');
         $router->post('/course/:id','CourseController@show');
         $router->post('/orders', 'OrderController@listUserOrder');
+        $router->delete('/course/:id', 'CourseController@destroy');
     });
 });
