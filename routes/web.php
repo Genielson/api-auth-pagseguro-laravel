@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/me', 'AuthController@me');
         $router->post('/courses', 'CourseController@index');
+        $router->post('/courses/create', 'CourseController@store');
         $router->post('/course/:id','CourseController@show');
         $router->post('/orders', 'OrderController@listUserOrder');
         $router->delete('/course/:id', 'CourseController@destroy');

@@ -52,7 +52,9 @@ class CourseController extends Controller
     }
 
     public function index(){
+
         $courses = Course::all();
+        return response()->json($courses);
         if(count($courses) > 0){
             return response()->json([$courses,200]);
         }else{
