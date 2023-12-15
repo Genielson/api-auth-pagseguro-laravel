@@ -159,7 +159,7 @@ class CourseController extends Controller
 
         if(isset($request->id)){
             $user = Auth::user();
-            $course = Course::select("*")->where("id",$request->id)->get();
+            $course = Course::find($request->id);
             if($course->user_id == $user->id){
                 $course->delete();
                 return response()->json(["mensagem" => "Curso deletado com sucesso"], 200);
