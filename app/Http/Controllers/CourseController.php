@@ -132,8 +132,11 @@ class CourseController extends Controller
          */
     public function store(Request $request)
     {
+
+
         if ($this->isRegisterValid($request)) {
-            if(Course::create($request)){
+
+            if(Course::create($request->all())){
                 return response()->json(['mensagem'=>' Curso criado com sucesso '], 201);
             }else{
                 return response()->json(['mensagem' => 'Erro ao criar o curso'], 500);
