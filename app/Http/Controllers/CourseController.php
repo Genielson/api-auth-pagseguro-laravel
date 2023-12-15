@@ -93,25 +93,22 @@ class CourseController extends Controller
      * @throws ValidationException
      */
 
-     public function update(Request $request){
+     public function update(Request $request)
+        {
+            if ($this->isUpdateValid($request)) {
+                $user = Auth::user();
+                $course = Course::find($request->id);
 
-        if($this->isUpdateValid($request)){
-            $user = Auth::user();
-            $course = Course::select("*")->where("id",$request->id)->get();
-            if($course->user_id == $user->id){
-                $course->delete();
-                return response()->json(["mensagem" => "Curso deletado com sucesso"], 200);
-            }else{
-                return response()->json(["mensagem" =>
-                "Não é possível deletar cursos de outros usuários"], 403);
+                if ($course && $course->user_id == $user->id) {
+                    $course->update($request->all());
+                    return response()->json(["mensagem" => "Curso atualizado com sucesso"], 200);
+                } else {
+                    return response()->json(["mensagem" => "Não é possível atualizar cursos de outros usuários"], 403);
+                }
+            } else {
+                return response()->json(["mensagem" => "Algum parametro não foi enviado corretamente"], 404);
             }
-        }else{
-            return response()->json(["mensagem" => "Algum parametro não foi enviado
-            corretamente"],404);
         }
-
-
-     }
 
 
 
