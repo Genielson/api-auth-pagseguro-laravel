@@ -90,7 +90,7 @@ class OrderController extends Controller
     {
         if ($this->isRegisterValid($request)) {
 
-            if(Order::create($request)){
+            if(Order::create($request->all())){
                 return response()->json(['mensagem'=>' Pedido criado com sucesso '], 201);
             }else{
                 return response()->json(['mensagem' => 'Erro ao criar o pedido'], 500);
