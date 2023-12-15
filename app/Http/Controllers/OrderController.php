@@ -74,7 +74,7 @@ class OrderController extends Controller
     public function listUserOrder(){
         $user = Auth::user();
         $orders = Order::where('user_id', $user->id)->get();
-        if($orders > 0){
+        if(count($orders) > 0){
             return response()->json([$orders,200]);
         }else{
             return response()->json(['mensagem'=>"Não encontramos nenhum pedido"], 404);
