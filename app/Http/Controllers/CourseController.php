@@ -116,16 +116,13 @@ class CourseController extends Controller
 
         /**
          * @param Request $request
-         * @return App\Traits\Iluminate\Http\Response|void
+         * @return \Illuminate\Http\JsonResponse
          * @throws ValidationException
          */
     public function store(Request $request)
     {
-
-
         if ($this->isRegisterValid($request)) {
-
-
+            return $this->repository->createNewCourse($request);
         }else{
             return response()->json(['mensagem'=>'Algum parametro não foi enviado corretamente'],404);
         }
