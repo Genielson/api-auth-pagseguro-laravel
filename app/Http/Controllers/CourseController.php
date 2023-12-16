@@ -146,20 +146,7 @@ class CourseController extends Controller
 
      public function destroy(Request $request){
 
-        if(isset($request->id)){
-            $user = Auth::user();
-            $course = Course::find($request->id);
-            if($course->user_id == $user->id){
-                $course->delete();
-                return response()->json(["mensagem" => "Curso deletado com sucesso"], 200);
-            }else{
-                return response()->json(["mensagem" =>
-                "Não é possível deletar cursos de outros usuários"], 403);
-            }
-        }else{
-            return response()->json(["mensagem" => "Algum parametro não foi enviado
-            corretamente"],404);
-        }
+
 
 
      }

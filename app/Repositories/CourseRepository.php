@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Contracts\CourseRepositoryInterface;
 use App\Models\Course;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Mockery\Exception;
 
@@ -69,5 +70,26 @@ class CourseRepository implements  CourseRepositoryInterface
        }catch (Exception $e){
            return response()->json(['mensagem'=> 'Houve um erro'],500);
        }
+    }
+
+    public function deleteCourse(Request $request, Auth $user)
+    {
+        try {
+            if (isset($request->id)) {
+                $course = Course::find($request->id);
+                if ($course->user_id == $user->id) {
+                    $course->delete();
+                    return response()->json(["mensagem" => "Curso deletado com sucesso"], 200);
+                } else {
+                    return response()->json(["mensagem" =>
+                        "Não é possível deletar cursos de outros usuários"], 403);
+                }
+            } else {
+                return response()->json(["mensagem" => "Algum parametro não foi enviado
+            corretamente"], 404);
+            }
+        }catch (Exception $e){
+            return response()->json(['mensagem'=> 'Houve um erro'],500);
+        }
     }
 }

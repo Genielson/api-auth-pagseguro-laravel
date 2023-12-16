@@ -12,5 +12,6 @@ interface CourseRepositoryInterface
     public function getCourseOfUser(Request $request);
     public function updateCourseOfUser(Request $request, Auth $user);
     public function createNewCourse(Request $request);
+    public function deleteCourse(Request $request, Auth $user);
 
 }
