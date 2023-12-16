@@ -57,7 +57,6 @@ class CourseController extends Controller
     }
 
     public function index(){
-
         $courses = Course::all();
         return response()->json($courses);
         if(count($courses) > 0){
@@ -65,6 +64,7 @@ class CourseController extends Controller
         }else{
             return response()->json(['mensagem'=>"Não encontramos nenhum curso"], 404);
         }
+
     }
 
 
@@ -76,8 +76,7 @@ class CourseController extends Controller
 
     public function show(Request $request){
         try{
-            $response = $this->repository->getCourseOfUser($request);
-            return $response;
+            return $this->repository->getCourseOfUser($request);
         }catch (Exception){
             return response()->json(['mensagem' => 'Houve um erro'],500);
         }
