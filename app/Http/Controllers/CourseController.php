@@ -57,7 +57,11 @@ class CourseController extends Controller
     }
 
     public function index(){
-
+        try{
+            return $this->repository->getAllCourses();
+        }catch(Exception $e){
+            return response()->json(['mensagem' => 'Houve um erro'],500);
+        }
 
     }
 
