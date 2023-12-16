@@ -3,22 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Repositories\CourseRepository;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Mockery\Exception;
 
 /** @package App\Http\Controllers */
 class CourseController extends Controller
 {
 
+    private $repository;
     use ApiResponser;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(){}
+    public function __construct(CourseRepository $courseRepository){
+        $this->repository = $courseRepository;
+    }
     /**
      * @param Request $request
      * @return array
@@ -65,24 +70,17 @@ class CourseController extends Controller
 
       /**
      * @param Request $request
-     * @return array
-     * @throws ValidationException
+     * @return \Illuminate\Http\JsonResponse
+       * @throws ValidationException
      */
 
     public function show(Request $request){
-
-        if(isset($request->id) && $request->id != NULL){
-            $course = Course::findOrFail($request->id);
-            if(count($course) > 0){
-                return response()->json([$course,200]);
-            }else{
-                return response()->json(['mensagem'=>"Não encontramos nenhum curso"], 404);
-            }
-        }else{
-            return response()->json(['mensagem'=>"Por favor, envie o parametro para busca"],
-            404);
+        try{
+            $response = $this->repository->getCourseOfUser($request);
+            return $response;
+        }catch (Exception){
+            return response()->json(['mensagem' => 'Houve um erro'],500);
         }
-
     }
 
 
@@ -95,18 +93,14 @@ class CourseController extends Controller
 
      public function update(Request $request)
         {
-            if ($this->isUpdateValid($request)) {
-                $user = Auth::user();
-                $course = Course::find($request->id);
+            try {
+                if ($this->isUpdateValid($request)) {
 
-                if ($course && $course->user_id == $user->id) {
-                    $course->update($request->all());
-                    return response()->json(["mensagem" => "Curso atualizado com sucesso"], 200);
                 } else {
-                    return response()->json(["mensagem" => "Não é possível atualizar cursos de outros usuários"], 403);
+                    return response()->json(["mensagem" => "Algum parametro não foi enviado corretamente"], 404);
                 }
-            } else {
-                return response()->json(["mensagem" => "Algum parametro não foi enviado corretamente"], 404);
+            }catch (Exception){
+                
             }
         }
 
