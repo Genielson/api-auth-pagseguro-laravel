@@ -87,20 +87,21 @@ class CourseController extends Controller
 
     /**
      * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
+     * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
 
      public function update(Request $request)
         {
             try {
-                if ($this->isUpdateValid($request)) {
-
+                if($this->isUpdateValid($request)) {
+                    $user = Auth::user();
+                   return $this->repository->updateCourseOfUser($request,$user);
                 } else {
                     return response()->json(["mensagem" => "Algum parametro não foi enviado corretamente"], 404);
                 }
             }catch (Exception){
-                
+                return response()->json(["mensagem" => "Houve um erro"], 500);
             }
         }
 

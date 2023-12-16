@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Http\Contracts\CourseRepositoryInterface;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
+use Mockery\Exception;
 
 class CourseRepository implements  CourseRepositoryInterface
 {
@@ -33,9 +35,21 @@ class CourseRepository implements  CourseRepositoryInterface
         }
     }
 
-    public function updateCourseOfUser(\Illuminate\Http\Request $request)
+    public function updateCourseOfUser(\Illuminate\Http\Request $request,Auth $user)
     {
-        // TODO: Implement updateCourseOfUser() method.
+        try{
+            $course = Course::find($request->id);
+            if ($course && $course->user_id == $user->id) {
+                $course->update($request->all());
+                return response()->json(["mensagem" => "Curso atualizado
+                com sucesso"], 200);
+            } else {
+                return response()->json(["mensagem" => "Não é possível atualizar
+                cursos de outros usuários"], 403);
+            }
+        }catch(Exception $e){
+            return response()->json(['mensagem'=> 'Houve um erro'],500);
+        }
     }
 
     public function createNewCourse(\Illuminate\Http\Request $request)
