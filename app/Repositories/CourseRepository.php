@@ -56,4 +56,18 @@ class CourseRepository implements  CourseRepositoryInterface
     {
         // TODO: Implement createNewCourse() method.
     }
+
+    public function getAllCourses()
+    {
+       try{
+           $courses = Course::all();
+           if(count($courses) > 0){
+               return response()->json([$courses,200]);
+           }else{
+               return response()->json(['mensagem'=>"Não encontramos nenhum curso"], 404);
+           }
+       }catch (Exception $e){
+           return response()->json(['mensagem'=> 'Houve um erro'],500);
+       }
+    }
 }
