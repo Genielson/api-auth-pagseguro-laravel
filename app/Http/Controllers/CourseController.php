@@ -138,17 +138,18 @@ class CourseController extends Controller
 
     /**
      * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
+     * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
 
 
 
      public function destroy(Request $request){
-
-
-
-
+        try{
+            $user = Auth::user();
+            return $this->repository->deleteCourse($request,$user);
+        }catch (Exception $e){
+            return response()->json(["mensagem" => "Houve um erro"], 500);
+        }
      }
-
 }
