@@ -55,7 +55,15 @@ class CourseRepository implements  CourseRepositoryInterface
 
     public function createNewCourse(\Illuminate\Http\Request $request)
     {
-        // TODO: Implement createNewCourse() method.
+        try{
+            if(Course::create($request->all())){
+                return response()->json(['mensagem'=>' Curso criado com sucesso '], 201);
+            }else{
+                return response()->json(['mensagem' => 'Erro ao criar o curso'], 500);
+            }
+        }catch(Exception $e){
+            return response()->json(['mensagem'=> 'Houve um erro'],500);
+        }
     }
 
     public function getAllCourses()
