@@ -8,6 +8,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Mockery\Exception;
 
 /** @package App\Http\Controllers */
 class OrderController extends Controller
@@ -99,11 +100,15 @@ class OrderController extends Controller
 
      /**
      * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
-     * @throws ValidationException
+     * @return \Illuminate\Http\JsonResponse
+      * @throws ValidationException
      */
     public function destroy(Request $request){
-
+        try{
+            return $this->repository->createOrder($request);
+        }catch (Exception $e){
+            return response()->json(['mensagem' => 'Houve um erro'], 500);
+        }
     }
 
 }
