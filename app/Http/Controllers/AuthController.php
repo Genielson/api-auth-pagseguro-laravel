@@ -82,12 +82,7 @@ class AuthController extends Controller
     {
         if ($this->isRegisterValid($request)) {
             try {
-                $user = new User();
-                $user->password = $request->password;
-                $user->email = $request->email;
-                $user->name = $request->name;
-                $user->save();
-                return $this->successResponse($user);
+
             } catch (\Exception $e) {
                 return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
             }

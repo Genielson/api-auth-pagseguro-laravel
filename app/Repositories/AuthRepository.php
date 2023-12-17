@@ -3,13 +3,15 @@
 namespace App\Repositories;
 
 use App\Http\Contracts\AuthRepositoryInterface;
+use App\Models\User;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Exception;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-
+    use ApiResponser;
     public function getUserLogin(Request $request)
     {
         try {
@@ -27,7 +29,16 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function userRegister(Request $request)
     {
-        // TODO: Implement userRegister() method.
+        try {
+            $user = new User();
+            $user->password = $request->password;
+            $user->email = $request->email;
+            $user->name = $request->name;
+            $user->save();
+            return $this->successResponse($user);
+        }catch (Exception $e){
+            return response()->json(['mensagem'=> 'Houve um erro'],500);
+        }
     }
 
     public function getUserInfo()
