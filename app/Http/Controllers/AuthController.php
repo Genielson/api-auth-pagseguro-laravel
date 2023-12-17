@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repositories\AuthRepository;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,12 +15,15 @@ class AuthController extends Controller
 {
 
     use ApiResponser;
+    private $repository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(){}
+    public function __construct(AuthRepository $authRepository){
+        $this->repository = $authRepository;
+    }
 
 
     /**
@@ -62,7 +66,7 @@ class AuthController extends Controller
     {
         try {
             if ($this->isLoginValid($request)) {
-
+                return $this->repository->getUserLogin($request);
             }
         }catch (Exception $e){
 
