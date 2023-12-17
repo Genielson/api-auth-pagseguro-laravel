@@ -7,6 +7,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Mockery\Exception;
 
 /** @package App\Http\Controllers */
 class AuthController extends Controller
@@ -59,14 +60,12 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        if ($this->isLoginValid($request)) {
-            $credentials = $request->only(['email', 'password']);
-            $token = auth()->setTTL(env('JWT_TTL','60'))->attempt($credentials);
-            if($token){
-                 return $this->respondWithToken($token);
-            }else{
-                return $this->errorResponse('User not found', Response::HTTP_NOT_FOUND);
+        try {
+            if ($this->isLoginValid($request)) {
+
             }
+        }catch (Exception $e){
+
         }
     }
 
