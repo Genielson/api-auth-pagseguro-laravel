@@ -43,6 +43,11 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function getUserInfo()
     {
-        // TODO: Implement getUserInfo() method.
+        try{
+            $user = auth()->user();
+            return $this->successResponse($user);
+        }catch (Exception $e){
+            return response()->json(['mensagem'=> 'Houve um erro'],500);
+        }
     }
 }

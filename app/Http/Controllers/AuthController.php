@@ -75,14 +75,14 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|App\Traits\Iluminate\Http\JsonResponse|void
+     * @return \App\Traits\Iluminate\Http\JsonResponse
      * @throws ValidationException
      */
     public function register(Request $request)
     {
         if ($this->isRegisterValid($request)) {
             try {
-
+                return $this->repository->userRegister($request);
             } catch (\Exception $e) {
                 return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
             }
@@ -90,7 +90,10 @@ class AuthController extends Controller
     }
 
     public function me(){
-            $user = auth()->user();
-            return $this->successResponse($user);
+            try {
+
+            }catch (Exception $e){
+
+            }
     }
 }
