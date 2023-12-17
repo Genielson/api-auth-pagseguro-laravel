@@ -61,17 +61,7 @@ class OrderController extends Controller
 
     public function show(Request $request){
 
-        if(isset($request->id) && $request->id != NULL){
-            $orders = Order::findOrFail($request->id);
-            if(count($orders) > 0){
-                return response()->json([$orders,200]);
-            }else{
-                return response()->json(['mensagem'=>"Não encontramos nenhum pedido"], 404);
-            }
-        }else{
-            return response()->json(['mensagem'=>"Por favor, envie o parametro para busca"],
-            404);
-        }
+
 
     }
 

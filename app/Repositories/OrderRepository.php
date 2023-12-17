@@ -25,7 +25,23 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function getOrderById(Request $request)
     {
-        // TODO: Implement getOrderById() method.
+        try{
+
+            if(isset($request->id) && $request->id != NULL){
+                $orders = Order::findOrFail($request->id);
+                if(count($orders) > 0){
+                    return response()->json([$orders,200]);
+                }else{
+                    return response()->json(['mensagem'=>"Não encontramos nenhum pedido"], 404);
+                }
+            }else{
+                return response()->json(['mensagem'=>"Por favor, envie o parametro para busca"],
+                    404);
+            }
+
+        }catch (\Exception $e){
+            return response()->json(['mensagem'=>"Houve um erro"], 500);
+        }
     }
 
     public function createOrder(Request $request)
