@@ -55,13 +55,17 @@ class OrderController extends Controller
 
       /**
      * @param Request $request
-     * @return array
-     * @throws ValidationException
+     * @return \Illuminate\Http\JsonResponse
+       * @throws ValidationException
      */
 
     public function show(Request $request){
 
-
+        try{
+            return $this->repository->getOrderById($request);
+        }catch (\Exception $e){
+            return response()->json(['mensagem'=>"Houve um erro"], 500);
+        }
 
     }
 
