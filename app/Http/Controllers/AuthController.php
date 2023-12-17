@@ -69,7 +69,7 @@ class AuthController extends Controller
                 return $this->repository->getUserLogin($request);
             }
         }catch (Exception $e){
-
+            return response()->json(['mensagem' => 'Houve um erro'], 500);
         }
     }
 
@@ -91,9 +91,9 @@ class AuthController extends Controller
 
     public function me(){
             try {
-
+                return $this->repository->getUserInfo();
             }catch (Exception $e){
-
+                return response()->json(['mensagem' => 'Houve um erro'], 500);
             }
     }
 }
