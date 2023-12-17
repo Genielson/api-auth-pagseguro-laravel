@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Http\Contracts\OrderRepositoryInterface;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderRepository implements OrderRepositoryInterface
 {
@@ -59,6 +60,20 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function deleteOrder(Request $request)
     {
-        // TODO: Implement deleteOrder() method.
+        try{
+            $user = Auth::user();
+            if(isset($request->id)){
+                if($user->id == $request->user_id){
+                    $order = Order::findOrFail($request->id);
+                    $order->delete();
+                    return response()->json(["mensagem" => "Pedido deletado com sucesso"], 200);
+                }
+            }else{
+                return response()->json(['mensagem'=>'Algum parametro não foi enviado
+            corretamente'],404);
+            }
+        }catch (\Exception $e){
+            return response()->json(['mensagem'=>"Houve um erro"], 500);
+        }
     }
 }
