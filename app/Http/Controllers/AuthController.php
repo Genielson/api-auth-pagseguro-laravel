@@ -61,10 +61,9 @@ class AuthController extends Controller
     {
         if ($this->isLoginValid($request)) {
             $credentials = $request->only(['email', 'password']);
-
             $token = auth()->setTTL(env('JWT_TTL','60'))->attempt($credentials);
             if($token){
-            return $this->respondWithToken($token);
+                 return $this->respondWithToken($token);
             }else{
                 return $this->errorResponse('User not found', Response::HTTP_NOT_FOUND);
             }
@@ -94,7 +93,6 @@ class AuthController extends Controller
 
     public function me(){
             $user = auth()->user();
-
             return $this->successResponse($user);
     }
 }
