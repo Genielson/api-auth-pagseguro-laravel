@@ -44,6 +44,12 @@ class OrderController extends Controller
 
     public function index(){
 
+        try{
+            return $this->repository->getAllOrders();
+        }catch (Exception $e){
+            return response()->json(['mensagem' => 'Houve um erro'],500);
+        }
+
     }
 
 
