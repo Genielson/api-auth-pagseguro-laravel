@@ -81,17 +81,19 @@ class OrderController extends Controller
 
     /**
      * @param Request $request
-     * @return App\Traits\Iluminate\Http\Response|void
+     * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
     public function store(Request $request)
     {
-        if ($this->isRegisterValid($request)) {
-
-
-
-        }else{
-            return response()->json(['mensagem'=>'Algum parametro não foi enviado corretamente'],404);
+        try {
+            if ($this->isRegisterValid($request)) {
+                $this->repository->createOrder($request);
+            } else {
+                return response()->json(['mensagem' => 'Algum parametro não foi enviado corretamente'], 404);
+            }
+        }catch (\Exception $e){
+            return response()->json(['mensagem' => 'Houve um erro'], 500);
         }
     }
 
